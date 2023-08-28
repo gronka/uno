@@ -1,0 +1,62 @@
+# 4th do deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-user-pg
+  labels:
+    #name: uf-user-pg
+    app: uf-user-pg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      #run: uf-user-pg
+      app: uf-user-pg
+  template:
+    metadata:
+      labels:
+        #run: uf-user-pg
+        app: uf-user-pg
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:14.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: 5432
+            name: uf-user-pg
+        #env:
+          #- name: POSTGRES_DB
+            #value: uf_user
+          #- name: POSTGRES_USER
+            #value: postgres
+          #- name: POSTGRES_PASSWORD
+            #value: postgres
+        envFrom:
+          - configMapRef:
+              name: uf-user-pg-config
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgredb-user
+      volumes:
+        - name: postgredb-user
+          persistentVolumeClaim:
+            claimName: uf-user-postgres-data-claim
+
+---
+# 5th create service
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-user-pg       # Name of the resource
+  labels:                 # Labels that will be applied to the resource
+    app: uf-user-pg
+spec:
+  #type: LoadBalancer
+  #type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: uf-user-pg
+    #tier: postgres

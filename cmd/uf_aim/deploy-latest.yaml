@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-aim-dep
+  labels:
+    app: uf-aim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uf-aim
+  template:
+    metadata:
+      labels:
+        app: uf-aim
+    spec:
+      containers:
+      - name: uf-aim-app
+        image: docker.io/gronka/uf_aim:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8030
+          #name: uf-aim-port-svc
+        envFrom:
+          - configMapRef:
+              name: uno-global-config-prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-aim
+spec:
+  selector:
+    app: uf-aim
+  ports:
+  - protocol: TCP
+    port: 8030
+    #name: uf-aim-port

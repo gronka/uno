@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-user-dep
+  labels:
+    app: uf-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uf-user
+  template:
+    metadata:
+      labels:
+        app: uf-user
+    spec:
+      containers:
+      - name: uf-user-app
+        image: docker.io/gronka/uf_user:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8020
+          #name: uf-user-port-svc
+        envFrom:
+          - configMapRef:
+              name: uno-global-config-prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-user
+spec:
+  selector:
+    app: uf-user
+  ports:
+  - protocol: TCP
+    port: 8020
+    #name: uf-user-port

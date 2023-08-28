@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uf-aim-pg-config
+  labels:
+    app: uf-aim-pg
+data:
+  POSTGRES_DB: uf_aim
+  POSTGRES_USER: postgres 
+  POSTGRES_PASSWORD: postgres 
+  POSTGRES_HOST_AUTH_METHOD: trust

@@ -1,0 +1,62 @@
+# 4th do deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-order-pg
+  labels:
+    #name: uf-order-pg
+    app: uf-order-pg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      #run: uf-order-pg
+      app: uf-order-pg
+  template:
+    metadata:
+      labels:
+        #run: uf-order-pg
+        app: uf-order-pg
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:14.4
+        imagePullPolicy: "IfNotPresent"
+        ports:
+          - containerPort: 5432
+            name: uf-order-pg
+        #env:
+          #- name: POSTGRES_DB
+            #value: uf_order
+          #- name: POSTGRES_USER
+            #value: postgres
+          #- name: POSTGRES_PASSWORD
+            #value: postgres
+        envFrom:
+          - configMapRef:
+              name: uf-order-pg-config
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: uf-order-postgres-data-claim
+
+---
+# 5th create service
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-order-pg       # Name of the resource
+  labels:                 # Labels that will be applied to the resource
+    app: uf-order-pg
+spec:
+  #type: LoadBalancer
+  #type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: uf-order-pg
+    #tier: postgres

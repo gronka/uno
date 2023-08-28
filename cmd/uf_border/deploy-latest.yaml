@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-border-dep
+  labels:
+    app: uf-border
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uf-border
+  template:
+    metadata:
+      labels:
+        app: uf-border
+    spec:
+      containers:
+      - name: uf-border-app
+        image: docker.io/gronka/uf_border:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8010
+          #name: uf-border-port-svc
+        envFrom:
+          - configMapRef:
+              name: uno-global-config-prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-border
+spec:
+  selector:
+    app: uf-border
+  ports:
+  - protocol: TCP
+    port: 8010
+    #name: uf-border-port

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-maha-deployment
+  labels:
+    name: uf-maha
+    #app: uf-maha-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      #app: uf-maha-app
+      run: uf-maha
+  template:
+    metadata:
+      labels:
+        #app: uf-maha-app
+        run: uf-maha
+    spec:
+      containers:
+      - name: uf-maha-app
+        image: docker.io/gronka/uf_maha:v0.2
+        ports:
+        - containerPort: 8020
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-maha
+  labels:
+    run: uf-maha
+spec:
+  selector:
+    app.kubernetes.io/name: uf-maha
+    run: uf-maha
+  ports:
+  - protocol: TCP
+    port: 8060
+    targetPort: 8060
+  type: LoadBalancer
+  externalTrafficPolicy: Local

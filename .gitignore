@@ -1,0 +1,19 @@
+# golang
+main
+**/build
+cmd/*/uf_aim
+cmd/*/uf_border
+cmd/*/uf_maha
+cmd/*/uf_order
+cmd/*/uf_public
+cmd/*/uf_sms
+cmd/*/uf_user
+tmp/
+
+# locally generated SSL certs
+localhost+*
+
+.env.json
+.env.prod.json
+.env.prod.json
+cmd/global/global-config-prod.yaml

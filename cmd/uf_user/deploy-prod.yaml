@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-user-deployment
+  labels:
+    name: uf-user
+    #app: uf-user-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      #app: uf-user-app
+      run: uf-user
+  template:
+    metadata:
+      labels:
+        #app: uf-user-app
+        run: uf-user
+    spec:
+      containers:
+      - name: uf-user-app
+        image: docker.io/gronka/uf_user:v0.2
+        ports:
+        - containerPort: 8020
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-user
+  labels:
+    run: uf-user
+spec:
+  selector:
+    app.kubernetes.io/name: uf-user
+    run: uf-user
+  ports:
+  - protocol: TCP
+    port: 8020
+    targetPort: 8020
+  type: LoadBalancer
+  externalTrafficPolicy: Local

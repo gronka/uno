@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fridayy-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - api.cheese.rodeo
+    #secretName: example-tls
+    secretName: letsencrypt-secret-prod
+  rules:
+  # list of services to connect to
+  - host: api.cheese.rodeo
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            # name is domain name of service
+            name: uf-public
+            port:
+              number: 8050
+  #- host: api.cheese.rodeo
+    #http:
+      #paths:
+      #- pathType: Prefix
+        #path: "/"
+        #backend:
+          #service:
+            #name: uf-public
+            #port:
+              #number: 443

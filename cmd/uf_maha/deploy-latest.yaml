@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-maha-dep
+  labels:
+    app: uf-maha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uf-maha
+  template:
+    metadata:
+      labels:
+        app: uf-maha
+    spec:
+      containers:
+      - name: uf-maha-app
+        image: docker.io/gronka/uf_maha:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8060
+          #name: uf-maha-port-svc
+        envFrom:
+          - configMapRef:
+              name: uno-global-config-prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-maha
+spec:
+  selector:
+    app: uf-maha
+  ports:
+  - protocol: TCP
+    port: 8060
+    #name: uf-maha-port

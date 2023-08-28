@@ -1,0 +1,8 @@
+build:
+  stage: build
+  image: ubuntu:22.04
+  script:
+    - apt update
+    #- apt install -y buildah runc ca-certificates podman qemu-user-static
+
+    #- podman login docker.io -u $DOCKER_NAME --password-stdin $DOCKER_PASS

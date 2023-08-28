@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uf-order-dep
+  labels:
+    app: uf-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uf-order
+  template:
+    metadata:
+      labels:
+        app: uf-order
+    spec:
+      containers:
+      - name: uf-order-app
+        image: docker.io/gronka/uf_order:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8040
+          #name: uf-order-port-svc
+        envFrom:
+          - configMapRef:
+              name: uno-global-config-prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uf-order
+spec:
+  selector:
+    app: uf-order
+  ports:
+  - protocol: TCP
+    port: 8040
+    #name: uf-order-port

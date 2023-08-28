@@ -1,0 +1,29 @@
+# 1st create volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: uf-maha-postgres-data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity: 
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/volume/uf-maha"
+---
+
+# 2nd create volume claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uf-maha-postgres-data-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

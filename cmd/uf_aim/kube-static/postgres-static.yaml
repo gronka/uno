@@ -1,0 +1,29 @@
+# 1st create volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: uf-aim-postgres-data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity: 
+    storage: 40Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/volume/uf-aim"
+---
+
+# 2nd create volume claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uf-aim-postgres-data-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 40Gi
